@@ -7,6 +7,9 @@ for use with FreeSWITCH's mod_rtmp.  This is dependant on the swfobject lib.
 @param {Object} [OtherArgs] Addtional options.
 @param {Boolean} [OtherArgs.suppressRingSound] If true, the phone will not 
 	play the embedded ring sound.  Defaults to true.
+@param {String} [OtherArgs.pathToFreeswitchSwf] If the freeswitch.swf 
+	doesn't live in the same directory as the page that uses the flashphone,
+	it might be a good idea to set this.
 @param {Function} [OtherArgs.onInit] Function to use for event handling of
 	the onInit event.
 @param {Function} [OtherArgs.onConnected] Function to use for event handling
@@ -40,10 +43,14 @@ flashPhone = function(rtmpUrl, parentNode, OtherArgs){
 		})(this.eventNames[i], this);
 	}
 
+	if(!OtherArgs){
+		OtherArgs = {};
+	}
+
 	// create the flash phone itself and allow for some immediate events
 	// that would otherwise be missed.
 	var suppression = true;
-	if(OtherArgs && (OtherArgs.suppressRingSound !== undefined)){
+	if(OtherArgs.suppressRingSound !== undefined){
 		suppression = OtherArgs.suppressRingSound;
 	}
 	var flashvars = {
@@ -54,18 +61,21 @@ flashPhone = function(rtmpUrl, parentNode, OtherArgs){
 		allowScriptAccess: 'always'
 	};
 
-	swfobject.embedSWF("freeswitch.swf", parentNode, "250", "150", "9.0.0", "expressInstall.swf", flashvars, params, []);
+	var pathToSwf = "";
+	if(OtherArgs.pathToFreeswitchSwf){
+		pathtoSwf = OtherArgs.pathToFreeswitchSwf;
+	}
+
+	swfobject.embedSWF(pathToSwf + "freeswitch.swf", parentNode, "250", "150", "9.0.0", "expressInstall.swf", flashvars, params, []);
 	this.flashObject = document.getElementById(parentNode);
-	if(OtherArgs){
-		if(OtherArgs.onInit){
-			this.flashObject.addEventListener("onInit", OtherArgs.onInit, false);
-		}
-		if(OtherArgs.onConnected){
-			this.flashObject.addEventListener("onConnected", OtherArgs.onConnected, false);
-		}
-		if(OtherArgs.onDebug){
-			this.flashObject.addEventListener("onDebug", OtherArgs.onDebug, false);
-		}
+	if(OtherArgs.onInit){
+		this.flashObject.addEventListener("onInit", OtherArgs.onInit, false);
+	}
+	if(OtherArgs.onConnected){
+		this.flashObject.addEventListener("onConnected", OtherArgs.onConnected, false);
+	}
+	if(OtherArgs.onDebug){
+		this.flashObject.addEventListener("onDebug", OtherArgs.onDebug, false);
 	}
 
 	// subscribe self to some important events.
