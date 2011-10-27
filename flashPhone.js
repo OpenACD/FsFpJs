@@ -63,7 +63,7 @@ flashPhone = function(rtmpUrl, parentNode, OtherArgs){
 
 	var pathToSwf = "";
 	if(OtherArgs.pathToFreeswitchSwf){
-		pathtoSwf = OtherArgs.pathToFreeswitchSwf;
+		pathToSwf = OtherArgs.pathToFreeswitchSwf;
 	}
 
 	swfobject.embedSWF(pathToSwf + "freeswitch.swf", parentNode, "250", "150", "9.0.0", "expressInstall.swf", flashvars, params, []);
